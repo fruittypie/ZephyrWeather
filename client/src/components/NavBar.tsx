@@ -1,26 +1,31 @@
-import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import { Link } from 'react-router-dom';
 
-const MyNavbar: React.FC = () => {
+function NavBar() {
   return (
-    <Navbar bg="light" variant="light">
-      <Container>
-        <Nav className="me-auto">
-          <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="/map">Map</Nav.Link>
-          <Nav.Link href="/news">News</Nav.Link>
-          <Nav.Link href="/login">Login</Nav.Link>
-        </Nav>
-      </Container>
-    </Navbar>
+    <nav className="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
+      <div className="container">
+        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item me-5">
+              <Link className="nav-link" to="/">Home</Link>
+            </li>
+            <li className="nav-item me-5">
+              <Link className="nav-link" to="/map">Map</Link>
+            </li>
+            <li className="nav-item me-5">
+              <Link className="nav-link" to="/news">News</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/login">Login</Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
   );
 }
 
-export default MyNavbar;
-
-
-
-
-
+export default NavBar;
