@@ -1,6 +1,6 @@
 export const WeatherMap = () => {
     return (
-        <h1>About</h1>
+        <h1>There will be a map</h1>
 
     );
 }
