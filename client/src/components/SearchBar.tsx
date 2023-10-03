@@ -10,7 +10,7 @@ const SearchBar: React.FC = ({}) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const apiKey = "293a5d839a79bb53686c89544634a786";
+  const apiKey = "";
 
   useEffect(() => {
     if (input.length >= 2) {
