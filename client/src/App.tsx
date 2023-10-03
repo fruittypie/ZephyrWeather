@@ -8,7 +8,7 @@ import WeatherMap from './pages/Map';
 import Login from './pages/Login';
 import SearchBar from './components/SearchBar';
 
-
+// edit response later
 function App() {
      return (
      <>
@@ -26,7 +26,7 @@ function App() {
             </Router>
             <div className="search-bar-container">
                 <SearchBar />
-                <div>SearchResult</div>
+                <div>SuggestionList</div>
             </div>
             <button onClick={() => alert("clicked")}>My Button</button>
          </div>     
