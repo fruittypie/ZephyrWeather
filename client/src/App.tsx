@@ -6,9 +6,7 @@ import Homepage from './pages/Homepage';
 import News from './pages/News';
 import WeatherMap from './pages/Map';
 import Login from './pages/Login';
-import SearchBar from './components/SearchBar';
 
-// edit response later
 function App() {
      return (
      <>
@@ -22,13 +20,11 @@ function App() {
                             <Route path="/news" element={<News />} />
                             <Route path="/login" element={<Login />} />
                         </Routes>
+                    
                 </div>
+
             </Router>
-            <div className="search-bar-container">
-                <SearchBar />
-                <div>SuggestionList</div>
-            </div>
-            <button onClick={() => alert("clicked")}>My Button</button>
+            
          </div>     
      </>
      );

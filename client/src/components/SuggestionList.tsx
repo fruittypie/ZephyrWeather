@@ -1,4 +1,5 @@
 import React from "react";
+import "./SuggestionList.css";
 
 interface SuggestionListProps {
   suggestions: string[];
@@ -10,6 +11,7 @@ const SuggestionList: React.FC<SuggestionListProps> = ({
   onSuggestionClick,
 }) => {
   return (
+    <div>
     <ul className="suggestion-list">
       {suggestions.map((city) => (
         <li key={city} onClick={() => onSuggestionClick(city)}>
@@ -17,6 +19,7 @@ const SuggestionList: React.FC<SuggestionListProps> = ({
         </li>
       ))}
     </ul>
+    </div>
   );
 };
 
