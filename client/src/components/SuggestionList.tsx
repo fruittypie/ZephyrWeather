@@ -1,7 +1,7 @@
 import React from "react";
 import "./SuggestionList.css";
 
-interface SuggestionListProps {
+type SuggestionListProps = {
   suggestions: string[];
   onSuggestionClick: (city: string) => void;
 }

@@ -8,10 +8,9 @@ const apiKey = "293a5d839a79bb53686c89544634a786";
 
 type MyProps = {
   onComplete: any;
-
 };
 
-const SearchBar: React.FC<MyProps> = ({onComplete}:any) => {
+const SearchBar: React.FC<MyProps> = ({onComplete}) => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -28,6 +27,7 @@ const SearchBar: React.FC<MyProps> = ({onComplete}:any) => {
       onComplete(cities);
       setLoading(false);        
     } catch (error) {
+      //response edit later 
       console.error("Error finding suggestions", error);
       setLoading(false);
     }
