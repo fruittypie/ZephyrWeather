@@ -13,18 +13,16 @@ function App() {
         <div className="App">
             <Router>
                 <MyNavbar />
-                <div className="container mt-4">
+                <div>
                         <Routes>
                             <Route path="/" element={<Homepage />} />
                             <Route path="/map" element={<WeatherMap />} />
                             <Route path="/news" element={<News />} />
                             <Route path="/login" element={<Login />} />
-                        </Routes>
-                    
+                        </Routes>                   
                 </div>
-
             </Router>
-            
+          
          </div>     
      </>
      );

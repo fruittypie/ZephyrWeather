@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import {FaSearch} from "react-icons/fa";
 import "./SearchBar.css";
 import axios from "axios";
+import "./SuggestionList.tsx";
 
 const apiKey = "293a5d839a79bb53686c89544634a786";
 
@@ -18,16 +19,22 @@ const SearchBar: React.FC<MyProps> = ({onComplete}) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/find?q=${input}&type=like&sort=population&cnt=5&appid=${apiKey}`
+        `http://api.openweathermap.org/data/2.5/find?q=${input}&type=like&sort=population&cnt=5&appid=${apiKey}`
       );
 
       const cities: string[] = response.data.list.map(
-        (city: any) => city.name
+        (city: any) => {
+          return {
+            cityName : city.name,
+            countryName : city.sys.country,
+            coordLon : city.coord.lon,
+            coordLat : city.coord.lat
+          }
+        }
       );
       onComplete(cities);
       setLoading(false);        
     } catch (error) {
-      //response edit later 
       console.error("Error finding suggestions", error);
       setLoading(false);
     }
@@ -41,14 +48,15 @@ const SearchBar: React.FC<MyProps> = ({onComplete}) => {
     }
   }, [input]);
 
+
   return (
     <div className="input-wrapper">
-      <FaSearch id="search-icon" />
       <input
         placeholder="Search city"
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
+      <FaSearch id="search-icon" />
       {loading}
     </div>
   );
