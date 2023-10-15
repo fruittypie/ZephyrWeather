@@ -10,8 +10,8 @@ import "./Homepage.css"
 
 export const Homepage = () => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
-    const [latitude, setLatitude] = useState<number | null>(null);
-    const [longitude, setLongitude] = useState<number | null>(null);
+    const [latitude, setLatitude] = useState<number | undefined>();
+    const [longitude, setLongitude] = useState<number | undefined>();
  
     return (
         <> 
@@ -34,13 +34,14 @@ export const Homepage = () => {
                         </div>
                     </div> 
                 </div>
-                <div className="col-8">
+                <div className="col-6">
                     <WeatherWidget 
                         latitude={latitude} 
                         longitude={longitude}
                     />
-
-                    <ForecastDailyWidget
+                </div>
+                <div className="col-2">  
+                <ForecastDailyWidget
                         latitude={latitude}
                         longitude={longitude}
                     />
