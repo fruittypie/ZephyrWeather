@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { format, parseISO } from "date-fns";
 
 const apiKey = "293a5d839a79bb53686c89544634a786";
 const iconBaseUrl = "https://openweathermap.org/img/wn/";
@@ -7,18 +8,12 @@ const iconBaseUrl = "https://openweathermap.org/img/wn/";
 type WidgetProps = {
     latitude?: number;
     longitude?: number;
+    onDayClick: (day: string) => void;
   };
 
-// get a day of the week
-const daysWeek = (date: Date) => {
-    const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-    const dayIndex = new Date(date).getDay();
-    return days[dayIndex];
-}; 
-
-const ForecastDailyWidget: React.FC<WidgetProps> = ({ latitude = 51.5074, longitude =  -0.1278 }) => { 
+const ForecastDailyWidget: React.FC<WidgetProps> = ({ latitude = 51.5074, longitude =  -0.1278, onDayClick }) => { 
     const [forecastData, setForecastData] = useState<any>(); 
-    
+
     const getWeatherIconUrl = (iconCode: string) => {
         return `${iconBaseUrl}${iconCode}@2x.png`;
     };
@@ -31,11 +26,10 @@ const ForecastDailyWidget: React.FC<WidgetProps> = ({ latitude = 51.5074, longit
                      `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
                 ); 
                 setForecastData(response.data);
-                console.log(response.data);
+                //console.log(response.data);
             } catch (error) {
                 console.error("Error fetching data", error);
             }
-
         };
 
         fetchForecastData();
@@ -48,7 +42,7 @@ const ForecastDailyWidget: React.FC<WidgetProps> = ({ latitude = 51.5074, longit
                 <p>Loading</p>
             </div>
         );
-    }
+    };
 
     //empty object to store all temps by day
     const allTemperatures: { [day:string]: {min: number; max:number} } = {}
@@ -67,12 +61,14 @@ const ForecastDailyWidget: React.FC<WidgetProps> = ({ latitude = 51.5074, longit
             }
         }
     });
+    //console.log(allTemperatures);
 
     return (
         <div className="forecast-widget">
              <p>5-DAY FORECAST</p>
              {Object.entries(allTemperatures).map(([key,value], index: number) => {
-                return <div key={index}>
+                const parsedDate = parseISO(key);
+                return <div key={index} onClick={() => onDayClick(key)}>
                         <div className="forecast-temperature">
                             {Math.round(value.min)}°C / {Math.round(value.max)}°C
                         </div>
@@ -80,7 +76,7 @@ const ForecastDailyWidget: React.FC<WidgetProps> = ({ latitude = 51.5074, longit
                         src={getWeatherIconUrl(forecastData.list.find((item: any) => item.dt_txt.includes(key)).weather[0].icon)}
                         />
                         <p>
-                            {daysWeek(new Date(key))}
+                            {format(parsedDate, "E")}
                         </p>
                     </div>          
     })}

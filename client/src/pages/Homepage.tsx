@@ -2,6 +2,7 @@ import SearchBar from "../components/SearchBar";
 import SuggestionList from "../components/SuggestionList";
 import WeatherWidget from "../components/WeatherWidget"
 import ForecastDailyWidget from "../components/ForecastDailyWidget";
+import HourlyForecastWidget from "../components/HourlyForecastWidget";
 
 import { useState } from "react";
 import "./Homepage.css"
@@ -12,6 +13,7 @@ export const Homepage = () => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [latitude, setLatitude] = useState<number | undefined>();
     const [longitude, setLongitude] = useState<number | undefined>();
+    const [selectedDay, setSelectedDay] = useState<string | undefined>(new Date().toISOString());
  
     return (
         <> 
@@ -39,11 +41,17 @@ export const Homepage = () => {
                         latitude={latitude} 
                         longitude={longitude}
                     />
+                    <div className="col-12">
+                        {selectedDay && (
+                            <HourlyForecastWidget latitude={latitude} longitude={longitude} selectedDay={selectedDay} />
+                        )}
+                    </div>
                 </div>
                 <div className="col-2">  
                 <ForecastDailyWidget
                         latitude={latitude}
                         longitude={longitude}
+                        onDayClick={(day: string) => setSelectedDay(day)}
                     />
                 </div>
             </div>  
