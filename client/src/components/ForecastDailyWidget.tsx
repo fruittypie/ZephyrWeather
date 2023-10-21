@@ -44,6 +44,13 @@ const ForecastDailyWidget: React.FC<WidgetProps> = ({ latitude = 51.5074, longit
         );
     };
 
+    const adjustToTimeZone = (utcTime: string, timezoneOffset: number) => {
+        const utcDate = parseISO(utcTime);
+        // create a Date object converting a timezone from seconds to hours
+        const localDate = new Date(utcDate.setHours(utcDate.getHours() + timezoneOffset / 3600));
+        return localDate;
+      };
+
     //empty object to store all temps by day
     const allTemperatures: { [day:string]: {min: number; max:number} } = {}
 
@@ -66,20 +73,25 @@ const ForecastDailyWidget: React.FC<WidgetProps> = ({ latitude = 51.5074, longit
     return (
         <div className="forecast-widget">
              <p>5-DAY FORECAST</p>
-             {Object.entries(allTemperatures).map(([key,value], index: number) => {
-                const parsedDate = parseISO(key);
+             {Object.entries(allTemperatures).map(([key, value], index: number) => {
+                const dayForecast = forecastData.list.find((item: any) => item.dt_txt.includes(key));
+                const localTime = adjustToTimeZone(dayForecast.dt_txt, forecastData.city.timezone);
+                //console.log(localTime)
                 return <div key={index} onClick={() => onDayClick(key)}>
+                        {/* display temperature */}
                         <div className="forecast-temperature">
                             {Math.round(value.min)}°C / {Math.round(value.max)}°C
                         </div>
+                        {/* weather icon */}
                         <img className="weather-icon"
                         src={getWeatherIconUrl(forecastData.list.find((item: any) => item.dt_txt.includes(key)).weather[0].icon)}
                         />
+                        {/* display time */}
                         <p>
-                            {format(parsedDate, "E")}
+                            {format(localTime, "E")}
                         </p>
                     </div>          
-    })}
+            })}
         </div>
     );   
 };
