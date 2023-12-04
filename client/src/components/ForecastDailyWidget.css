@@ -1,0 +1,54 @@
+.forecast-widget {
+    margin: 2rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent line breaks */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the content horizontally */
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.4);
+  }
+  
+  .day-sign {
+    font-size: 18px;
+    margin-left: 20px;
+    font-weight: bold;
+    text-align: left;
+    width: 100%; 
+  }
+  
+  .daily-data {
+    display: flex;
+    justify-content: space-between; /* Distribute days horizontally */
+    align-items: center; /* Vertically center the content within each day */
+  }
+  
+  .day {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the content within each day */
+    padding-left: 10px;
+    padding-right: 10px;
+    min-width: 100px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.2s;
+    border-radius: 10px;
+
+    .forecast-temperature {
+      margin: 10px;
+    }
+  
+    .weather-icon {
+      max-width: 70px;
+      height: auto;
+    }
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.3); /* Change the background color on hover */
+        color: rgb(82, 77, 77); /* Change the text color on hover */
+      }
+  }
+  

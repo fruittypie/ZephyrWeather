@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { format, parseISO } from "date-fns";
+import { format, parse } from "date-fns";
+import "./ForecastDailyWidget.css";
+//import { format as formatzone } from 'date-fns-tz';
+
+
 
 const apiKey = "293a5d839a79bb53686c89544634a786";
 const iconBaseUrl = "https://openweathermap.org/img/wn/";
@@ -31,9 +35,7 @@ const ForecastDailyWidget: React.FC<WidgetProps> = ({ latitude = 51.5074, longit
                 console.error("Error fetching data", error);
             }
         };
-
         fetchForecastData();
-
     }, [latitude, longitude]);
 
     if (!forecastData) {
@@ -42,59 +44,68 @@ const ForecastDailyWidget: React.FC<WidgetProps> = ({ latitude = 51.5074, longit
                 <p>Loading</p>
             </div>
         );
+    }
+    const cityTimezoneOffset = forecastData.city.timezone;
+
+    const getDate = ( utcDt:number, timezoneOffset: number) => {
+        const utcOffset = (utcDt + timezoneOffset);
+        return new Date(utcOffset * 1000);
     };
 
-    const adjustToTimeZone = (utcTime: string, timezoneOffset: number) => {
-        const utcDate = parseISO(utcTime);
-        // create a Date object converting a timezone from seconds to hours
-        const localDate = new Date(utcDate.setHours(utcDate.getHours() + timezoneOffset / 3600));
-        return localDate;
-      };
 
     //empty object to store all temps by day
     const allTemperatures: { [day:string]: {min: number; max:number} } = {}
 
-    forecastData.list.forEach((forecast:any) => {
-        const day = forecast.dt_txt.split(" ")[0];
+    forecastData.list.forEach((forecast: any) => {
+        const localTime = getDate(forecast.dt, cityTimezoneOffset);
+        forecast.localTime = localTime;
+        const localDay = format(localTime, "MM/dd/yyyy");
+        //.log(localTime)
         const temperature = forecast.main.temp;
 
-        if(!allTemperatures[day]) {
-            allTemperatures[day] = {min: temperature, max: temperature};
-        } else {
-            if (temperature < allTemperatures[day].min) {
-                allTemperatures[day].min = temperature;
-            } else if (temperature > allTemperatures[day].max) {
-                allTemperatures[day].max = temperature;
-            }
-        }
-    });
-    //console.log(allTemperatures);
+         if(!allTemperatures[localDay]) {
+             allTemperatures[localDay] = {min: temperature, max: temperature};
+         } else {
+             if (temperature < allTemperatures[localDay].min) {
+                 allTemperatures[localDay].min = temperature;
+             } else if (temperature > allTemperatures[localDay].max) {
+                 allTemperatures[localDay].max = temperature;
+             }
+         }
+        //console.log(allTemperatures)
+     }); 
 
     return (
         <div className="forecast-widget">
-             <p>5-DAY FORECAST</p>
-             {Object.entries(allTemperatures).map(([key, value], index: number) => {
-                const dayForecast = forecastData.list.find((item: any) => item.dt_txt.includes(key));
-                const localTime = adjustToTimeZone(dayForecast.dt_txt, forecastData.city.timezone);
-                //console.log(localTime)
-                return <div key={index} onClick={() => onDayClick(key)}>
-                        {/* display temperature */}
+            <div className="day-sign">
+                 <p>5 day forecast</p>
+             </div>
+             <div className="daily-data">
+                {Object.entries(allTemperatures).map(([key, value], index: number) => {
+                    const parsedDate = parse(key, "MM/dd/yyyy", new Date());
+                    const dayOfWeek = format(parsedDate, "EEEE");
+                    const forecastItem = forecastData.list.find((item: any) =>
+                    item.localTime.getDate() === parsedDate.getDate()
+                    );                   
+                    return <div key={index} onClick={() => onDayClick(key)} className="day">
                         <div className="forecast-temperature">
                             {Math.round(value.min)}°C / {Math.round(value.max)}°C
                         </div>
-                        {/* weather icon */}
-                        <img className="weather-icon"
-                        src={getWeatherIconUrl(forecastData.list.find((item: any) => item.dt_txt.includes(key)).weather[0].icon)}
+                        {forecastItem && (
+                        <img
+                            className="weather-icon"
+                            src={getWeatherIconUrl(forecastItem.weather[0].icon)}
+                            alt={`Weather icon for ${dayOfWeek}`}
                         />
-                        {/* display time */}
+                        )}
                         <p>
-                            {format(localTime, "E")}
+                            {dayOfWeek}
                         </p>
-                    </div>          
-            })}
+                </div>          
+                })}
+            </div>
         </div>
     );   
 };
 
 export default ForecastDailyWidget;
-

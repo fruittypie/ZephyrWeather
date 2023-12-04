@@ -1,3 +1,6 @@
+.row {
+  font-family: 'Poppins', sans-serif;
+}
 .search-bar-container {
     width: 80%;
     margin: auto;

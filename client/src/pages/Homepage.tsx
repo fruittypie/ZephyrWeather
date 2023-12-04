@@ -1,8 +1,9 @@
 import SearchBar from "../components/SearchBar";
 import SuggestionList from "../components/SuggestionList";
-import WeatherWidget from "../components/WeatherWidget"
+import WeatherWidget from "../components/WeatherWidget";
 import ForecastDailyWidget from "../components/ForecastDailyWidget";
 import HourlyForecastWidget from "../components/HourlyForecastWidget";
+
 
 import { useState } from "react";
 import "./Homepage.css"
@@ -13,7 +14,7 @@ export const Homepage = () => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [latitude, setLatitude] = useState<number | undefined>();
     const [longitude, setLongitude] = useState<number | undefined>();
-    const [selectedDay, setSelectedDay] = useState<string | undefined>(new Date().toISOString());
+    const [selectedDay, setSelectedDay] = useState<string | undefined>();
  
     return (
         <> 
@@ -36,27 +37,28 @@ export const Homepage = () => {
                         </div>
                     </div> 
                 </div>
-                <div className="col-6">
-                    <WeatherWidget 
-                        latitude={latitude} 
-                        longitude={longitude}
+                <div className="col-8">
+                    <div>
+                        <WeatherWidget 
+                            latitude={latitude} 
+                            longitude={longitude}
                     />
-                    <div className="col-12">
+                    </div>
+                    <div>
                         {selectedDay && (
                             <HourlyForecastWidget latitude={latitude} longitude={longitude} selectedDay={selectedDay} />
                         )}
                     </div>
-                </div>
-                <div className="col-2">  
-                <ForecastDailyWidget
-                        latitude={latitude}
-                        longitude={longitude}
-                        onDayClick={(day: string) => setSelectedDay(day)}
-                    />
+                    <div >  
+                        <ForecastDailyWidget
+                            latitude={latitude}
+                            longitude={longitude}
+                            onDayClick={(day: string) => setSelectedDay(day)}
+                        />
+                    </div>
                 </div>
             </div>  
         </>
     );
 }
-
 export default Homepage;
