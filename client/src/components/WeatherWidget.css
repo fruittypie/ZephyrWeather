@@ -1,9 +1,10 @@
 .weather-widget {
+  color: white;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 10px;
-  margin: 2rem;
+  padding: 11px;
+  margin: 0 2rem 0;
   border-radius: 10px;
 }
 
@@ -15,6 +16,7 @@
   width: 100%;
   margin: 10px 0;
   flex-direction: column;
+
   
   .weather-icon {
     max-width: 300px;
@@ -33,13 +35,8 @@
   font-size: 36px;
 }
 
-.weather-details {
-  text-align: left;
-}
-
-
 /* Button */
-.toggle-button {
+.unit-switch {
   display: inline-block;
   cursor: pointer;
 }
@@ -49,22 +46,43 @@
 }
 
 .slider {
-  width: 60px;
+  width: 70px;
   height: 30px;
-  background-color:  rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.4);
   border-radius: 30px;
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center; 
+  justify-content: space-between;
+  padding: 0 10px;
 }
 
-.unit {
+.unit1 {
+  font-weight: 700;
+  color: white;
+  padding-left: 2px;
+}
+
+.unit2 {
   font-weight: 800;
   color: white;
+  padding-right: 2px;
+}
+
+.celsius .unit2 {
+  color: rgba(72,72,74,255);;
+  border-radius: 30px;
+  padding-left: 2px;
+  
+}
+.fahrenheit .unit1 {
+  color: rgba(72,72,74);
+  border-radius: 30px;
 }
 
 
-.checkbox:checked + .slider .unit {
-  left: 27px;
+.unit1:hover,
+.unit2:hover {
+  border-radius: 30px;
+  height: 100%;
 }

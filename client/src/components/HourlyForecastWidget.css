@@ -1,18 +1,18 @@
 .hourly-forecast-widget {
-  margin: 2rem;
-  background-color: rgba(255, 255, 255, 0.4);
+  margin: 0 2rem 0;
+  background-color: rgba(72,72,74, 0.2);
   padding: 10px;
-  overflow-x: auto; /* Enable horizontal scrolling */
-  white-space: nowrap; /* Prevent line breaks */
+  white-space: pre-line; /* Prevent line breaks */
   display: flex;
   flex-direction: column;
   align-items: start;
   max-width: 100%;
   border-radius: 10px;
-  box-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 10px rgba(72,72,74, 0.2);
 }
 
 .forecast-day {
+  color: rgb(72,72,74);
   font-size: 18px;
   margin-left: 10px;
   font-weight: bold;

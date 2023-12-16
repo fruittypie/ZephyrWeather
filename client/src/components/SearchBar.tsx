@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
-
 import {FaSearch} from "react-icons/fa";
 import "./SearchBar.css";
-import axios from "axios";
 import "./SuggestionList.tsx";
+import { findCityData } from '../utils/api';
 
-const apiKey = "293a5d839a79bb53686c89544634a786";
 
 type MyProps = {
-  onComplete: any;
+  onComplete: (cities: City[]) => void;
+};
+
+export type City = {
+  name: string;
+  country: string;
+  lat: number;
+  lon: number;
+  state?: string;
 };
 
 const SearchBar: React.FC<MyProps> = ({onComplete}) => {
@@ -18,25 +24,22 @@ const SearchBar: React.FC<MyProps> = ({onComplete}) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `http://api.openweathermap.org/data/2.5/find?q=${input}&type=like&sort=population&cnt=5&appid=${apiKey}`
-      );
+      const cityData = await findCityData(input);
 
-      const cities: string[] = response.data.list.map(
-        (city: any) => {
-          return {
-            cityName : city.name,
-            countryName : city.sys.country,
-            coordLon : city.coord.lon,
-            coordLat : city.coord.lat
-          }
-        }
-      );
+      const cities: City[] = cityData.map(
+        (city: City) => ({
+            name : city.name,
+            country : city.country,
+            lat : city.lat,
+            lon : city.lon,
+            state: city.state
+          }));
+
       onComplete(cities);
       setLoading(false);        
     } catch (error) {
-      console.error("Error finding suggestions", error);
-      setLoading(false);
+        console.error("Error finding suggestions", error);
+        setLoading(false);
     }
     };
 

@@ -1,18 +1,18 @@
 .forecast-widget {
     margin: 2rem;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(72,72,74, 0.2);
     padding: 10px;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Prevent line breaks */
+    overflow-x: auto;
+    white-space: nowrap;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center the content horizontally */
+    align-items: center; 
     max-width: 100%;
     border-radius: 10px;
-    box-shadow: 0 0 3px rgba(255, 255, 255, 0.4);
-  }
+    box-shadow: 0 0 10px rgba(72,72,74, 0.2);
   
   .day-sign {
+    color: rgb(72,72,74);
     font-size: 18px;
     margin-left: 20px;
     font-weight: bold;
@@ -22,14 +22,14 @@
   
   .daily-data {
     display: flex;
-    justify-content: space-between; /* Distribute days horizontally */
-    align-items: center; /* Vertically center the content within each day */
+    justify-content: space-between; 
+    align-items: center;
   }
   
   .day {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center the content within each day */
+    align-items: center; 
     padding-left: 10px;
     padding-right: 10px;
     min-width: 100px;
@@ -47,8 +47,6 @@
       height: auto;
     }
     &:hover {
-        background-color: rgba(255, 255, 255, 0.3); /* Change the background color on hover */
-        color: rgb(82, 77, 77); /* Change the text color on hover */
+      background-color: rgba(255, 255, 255, 0.6);
       }
-  }
-  
+  }}

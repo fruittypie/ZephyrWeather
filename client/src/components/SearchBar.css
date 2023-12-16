@@ -9,6 +9,12 @@
     align-items:center;
 }
 
+.search-bar-container {
+    width: 86%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
 input {
     background-color: transparent;
     border: none;

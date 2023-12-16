@@ -2,9 +2,18 @@ import React, {useState} from "react";
 import "./SuggestionList.css";
 
 type SuggestionListProps = {
-  suggestions: any;
-  onSuggestionClick: (city: any) => void;
+  suggestions: City[]; 
+  onSuggestionClick: (city: City) => void;
 }
+
+type City = {
+  name: string;
+  country: string;
+  lon: number;
+  lat: number;
+  state?: string;
+};
+
 
 const SuggestionList: React.FC<SuggestionListProps> = ({
   suggestions,
@@ -12,20 +21,22 @@ const SuggestionList: React.FC<SuggestionListProps> = ({
 }) => {
   const [showSuggestions, setShowSuggestions] = useState(true);
 
-  
-
-  const handleSuggestionClick = (city: any) => {
+  const handleSuggestionClick = (city: City) => {
     onSuggestionClick(city);
     setShowSuggestions(false);
-    
   };
+
   return (
-    <div>
+    <div className="suggestion-box">
       {showSuggestions && (
         <ul className="suggestion-list">
-          {suggestions.map((city:any) => (
-            <li className="suggestion-item" key={city.cityName} onClick={() => handleSuggestionClick(city)}>
-              {`${city.cityName}, ${city.countryName} ${city.coordLon}-${city.coordLat}`}
+          {suggestions.map((city:City, index: number) => (
+            <li 
+              className="suggestion-item"
+              key={`${city.name}_${index}`}
+              onClick={() => handleSuggestionClick(city)}
+            >
+              {`${city.name}, ${city.state}, ${city.country}`}
             </li>
           ))}
         </ul>

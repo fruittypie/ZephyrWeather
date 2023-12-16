@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { format, parse, parseISO} from "date-fns";
 import "./HourlyForecastWidget.css";  
+import { useUnit } from "../context/TemperatureContext";
+import { fetchForecastData } from '../utils/api';
 
-const apiKey = "293a5d839a79bb53686c89544634a786";
 const iconBaseUrl = "https://openweathermap.org/img/wn/";
 
 type MyProps = {
@@ -12,34 +12,59 @@ type MyProps = {
   selectedDay: string;
 };
 
-type ForecastData = {
-  dt: number;
+type HourlyData = {
+  list: WeatherDataProps[];
+  city: {
+    timezone: number; 
+  }
+}
 
-};
+type WeatherDataProps = {
+  weather: {
+      icon: string;
+      main: string;
+      description:string;
+  }[];
+  sys : {
+      country: string;
+  };
+  main: {
+      humidity: number;
+      temp: number;
+      feels_like: number;
+  };
+  wind: {
+      speed: number;
+  };
+  name: string;
+  timezone: number;
+  dt: number;
+}
 
 const HourlyForecastWidget: React.FC<MyProps> = ({
   latitude = 51.5074,
   longitude = -0.1278,
   selectedDay,
 }) => {
-  const [hourlyData, setHourlyData] = useState<any>();
+  const [hourlyData, setHourlyData] = useState<HourlyData>();
   const [isCurrentHour, setIsCurrentHour] = useState<boolean>(false);
-
+  const { isCelsius } = useUnit();
 
   useEffect(() => {
-    const FetchForecastData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
+        const data = await fetchForecastData(
+            latitude,
+            longitude,
+            isCelsius
         );
-        setHourlyData(response.data);
+        setHourlyData(data);
       } catch (error) {
         console.error("Error fetching data", error);
       }
     };
-
-    FetchForecastData();
-  }, [latitude, longitude]);
+    fetchData();
+  }, [latitude, longitude, isCelsius]);
 
   if (!hourlyData) {
     return (
@@ -49,45 +74,65 @@ const HourlyForecastWidget: React.FC<MyProps> = ({
     );
   }
 
-  // array of forecast data objects for selected day
- const selectedDayData = hourlyData.list
-    .filter((forecast: ForecastData) => {
-      const localTime = new Date(forecast.dt * 1000 + hourlyData.city.timezone * 1000);
+  // Filter forecast data for the selected day
+  const selectedDayData = hourlyData.list
+    .filter((forecast: WeatherDataProps) => {
+      const localTime = new Date(
+        forecast.dt * 1000 + hourlyData.city.timezone * 1000
+      );
       const localDay = format(localTime, "MM/dd/yyyy");
         return localDay === selectedDay
     });
-    //console.log(selectedDayData)
-    //console.log("selectedDay:", selectedDay);
-    const formattedSelectedDay = format(parse(selectedDay, "MM/dd/yyyy", new Date()), "yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    
+    // Format the selected day for further use
+    const formattedSelectedDay = format(
+      parse(selectedDay, 
+        "MM/dd/yyyy", 
+        new Date()
+      ),
+      "yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+    // Parse the formatted selected day into a Date object
     const parsedSelectedDay = parseISO(formattedSelectedDay);
 
   return (
     <div className="hourly-forecast-widget">
         <div className="forecast-day">
-          <p>Hourly Forecast for {format(parsedSelectedDay, "eeee")}</p>
+          <p>
+            Hourly Forecast for{" "}
+            {format(parsedSelectedDay, "eeee")}
+          </p>
         </div>
         <div className="hourly-data">
-      {selectedDayData.map((forecast:any , index: number) => {
-        const localTime = new Date(forecast.dt * 1000 + hourlyData.city.timezone * 1000);
-        let currentHour = "Now";
-        if (!isCurrentHour) {
-            setIsCurrentHour(true);
-          } else {
-            currentHour = format(localTime, "h:mm a");
-          }
-        return (
-        <div key={index}>
-          <p>{currentHour}</p>
-          <img
-            className="weather-icon"
-            src={iconBaseUrl + forecast.weather[0].icon + "@2x.png"}
-            alt={forecast.weather[0].description}
-          />
-          <p>{Math.round(forecast.main.temp)}°C</p>
+          {/* Map over the hourly forecast data for the selected day */}
+          {selectedDayData.map(
+            (forecast:WeatherDataProps , index: number) => {
+              const localTime = new Date(forecast.dt * 1000 + hourlyData.city.timezone * 1000);
+              let currentHour = "Now";
+              if (!isCurrentHour) {
+                setIsCurrentHour(true);
+              } else {
+                currentHour = format(localTime, "h:mm a");
+              }
+              return (
+                <div key={index}>
+                  <p>{currentHour}</p>
+                  <img
+                    className="weather-icon"
+                    src={iconBaseUrl + forecast.weather[0].icon + "@2x.png"}
+                    alt={forecast.weather[0].description}
+                  />
+                  <p>
+                    {isCelsius 
+                      ? `${Math.round(forecast.main.temp)} °C`
+                      : `${Math.round(forecast.main.temp)} °F`
+                    }
+                  </p>
+                </div>
+              );
+            }
+          )}
         </div>
-        );
-        })}
-    </div>
     </div>
   );
 };

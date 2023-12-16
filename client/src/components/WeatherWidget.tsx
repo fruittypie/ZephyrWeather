@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { TempProvider } from "./context/TemperatureUnitContext"
-import "./WeatherWidget.css"
+import { useUnit } from "../context/TemperatureContext";
+import { IconDroplet, IconWind, IconTemperature, IconMapPinFilled } from '@tabler/icons-react';
+import "./WeatherWidget.css";
+import { fetchWeatherData } from '../utils/api';
 
-const apiKey = "293a5d839a79bb53686c89544634a786";
 const iconBaseUrl = "https://openweathermap.org/img/wn/";
 
 type WidgetProps = {
@@ -11,34 +11,49 @@ type WidgetProps = {
     longitude?: number | null;
 };
 
-const WeatherWidget: React.FC<WidgetProps> = ({ latitude, longitude }) => { 
-    const [weatherData, setWeatherData] = useState<any>(); 
-    const [isCelsius, setIsCelsius] = useState(true);
-
-    const toggleTemperatureUnit = () => {
-        setIsCelsius((prevIsCelsius) => !prevIsCelsius);
+type WeatherDataProps = {
+    weather: {
+        icon: string;
+        main: string;
+    }[];
+    sys : {
+        country: string;
     };
+    main: {
+        humidity: number;
+        temp: number;
+        feels_like: number;
+    };
+    wind: {
+        speed: number;
+    };
+    name: string;
+}
+
+const WeatherWidget: React.FC<WidgetProps> = ({ latitude, longitude }) => { 
+    const [weatherData, setWeatherData] = useState<WeatherDataProps>(); 
+    const {isCelsius, toggleUnit} = useUnit();
 
     const getWeatherIconUrl = (iconCode: string) => {
         return `${iconBaseUrl}${iconCode}@4x.png`;
     };
 
-    const fetchWeatherData = async (lat: number, lon: number, isCelsius: boolean) => {
-        try {
-            const unit = isCelsius ? 'metric' : 'imperial';
-            const response = await axios.get(
-                `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=${unit}`
-            );
-            setWeatherData(response.data);
-        } catch (error) {
-            console.error("Error fetching data", error);
-        }
-    };
-
     useEffect(() => {
         const defaultLatitude = 51.5074;
         const defaultLongitude = -0.1278;
-        fetchWeatherData(latitude || defaultLatitude, longitude || defaultLongitude, isCelsius);
+        const fetchData = async () => {
+            try {
+              const data = await fetchWeatherData(
+                latitude || defaultLatitude,
+                longitude || defaultLongitude,
+                isCelsius
+              );
+              setWeatherData(data);
+            } catch (error) {
+                console.error("Error fetching data", error);
+        }
+    }
+    fetchData();
     }, [latitude, longitude, isCelsius]);
 
     if (!weatherData) {
@@ -49,25 +64,38 @@ const WeatherWidget: React.FC<WidgetProps> = ({ latitude, longitude }) => {
         )
     };
 
+    // Extract city name from weather data
     const city = `${weatherData.name}, ${weatherData.sys.country}`;
+    
     return (
         <div className="weather-widget">
             <div className="widget-row">
-                <p className="text mb-0" id="city-name">{city}</p>
+                <p className="text mb-0" id="city-name">
+                    <IconMapPinFilled 
+                        size={28}
+                        style={{ marginRight: '6px' }} 
+                    />
+                    {city}
+                </p>
                 <h2 className="temperature">
                     <strong>
-                        {isCelsius 
-                            ? `${Math.round(weatherData.main.temp)} °C` 
-                            : `${Math.round(weatherData.main.temp)} °F`
-                        }
+                        {Math.round(weatherData.main.temp)}
+                        {' °'}
+                        {isCelsius ? 'C' : 'F'}
                     </strong>
                 </h2>
-                <div className="toggle-button" onClick={toggleTemperatureUnit}>
-    <input type="checkbox" className="checkbox" checked={isCelsius} />
-    <div className="slider">
-        <span className="unit">{isCelsius ? "°F" : "°C"}</span>
-    </div>
-</div>
+                <div className="unit-switch" onClick={toggleUnit}>
+                    <input
+                        type="checkbox"
+                        className="checkbox"
+                        checked={isCelsius}
+                        onChange={toggleUnit}
+                    />
+                    <div className={`slider ${isCelsius ? "celsius" : "fahrenheit"}`}>
+                        <span className="unit1">°F</span>
+                        <span className="unit2">°C</span>
+                    </div>
+                </div>
             </div>
             <div className="widget-row">
                 <img 
@@ -77,16 +105,28 @@ const WeatherWidget: React.FC<WidgetProps> = ({ latitude, longitude }) => {
             </div>
             <div className="widget-row">
                 <div className="weather-details">
-                    <p>{weatherData.weather[0].main}</p>
-                    <p>Humidity: {weatherData.main.humidity} %</p>
-                    <p>Wind: {isCelsius 
-                        ? `${Math.round(weatherData.wind.speed)} m/c` 
-                        : `${Math.round(weatherData.wind.speed)} mph`
-                        }</p>
-                    <p>Feels Like: {isCelsius 
-                        ? `${Math.round(weatherData.main.feels_like)} °C` 
-                        : `${Math.round(weatherData.main.feels_like)} °F`
-                    }</p>
+                    <p style={{ fontWeight: 'bold' }}>{weatherData.weather[0].main}</p>
+                    <p> 
+                        <IconDroplet size={14} style={{ marginRight: '8px' }}/>
+                        <span style={{ marginRight: '15px' }}>Humidity:</span>
+                        {weatherData.main.humidity} %
+                    </p>
+                    <p>
+                        <IconWind size={16} style={{ marginRight: '8px' }}/>
+                        <span style={{ marginRight: '43px' }}>Wind:</span> 
+                        {isCelsius 
+                            ? `${Math.round(weatherData.wind.speed)} m/c` 
+                            : `${Math.round(weatherData.wind.speed)} mph`
+                        }
+                    </p>
+                    <p>
+                        <IconTemperature size={16} style={{ marginRight: '10px' }} />
+                        <span style={{ marginRight: '10px' }}>Feels Like:</span>
+                        {isCelsius 
+                            ? `${Math.round(weatherData.main.feels_like)} °C` 
+                            : `${Math.round(weatherData.main.feels_like)} °F`
+                        }
+                    </p>
                 </div>
             </div>
         </div>
