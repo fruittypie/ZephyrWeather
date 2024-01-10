@@ -1,5 +1,4 @@
 ## Zephyr Weather
-#### Video Demo:  <URL WILL BE HERE>
 #### Description:
  The project is a user-friendly weather forecast and news application, offering real-time weather updates, interactive maps, and personalized news content to keep users informed in one accessible platform.
 ## Why I built the project this way
