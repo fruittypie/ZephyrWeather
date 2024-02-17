@@ -1,0 +1,40 @@
+.hourly-forecast-widget {
+  margin: 0 2rem 0;
+  background-color: rgba(72,72,74, 0.2);
+  padding: 10px;
+  white-space: pre-line; /* Prevent line breaks */
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(72,72,74, 0.2);
+}
+
+.forecast-day {
+  color: rgb(72,72,74);
+  font-size: 18px;
+  margin-left: 10px;
+  font-weight: bold;
+  text-align: left;
+  width: 100%; 
+}
+
+.hourly-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow-x: auto;
+  max-width: 100%;
+  padding: 10px 0;
+}
+
+.hourly-data div {
+  text-align: center;
+  margin: 0 25px
+}
+
+.weather-icon {
+  max-width: 50px;
+  height: auto;
+}

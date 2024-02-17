@@ -1,0 +1,88 @@
+.weather-widget {
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 11px;
+  margin: 0 2rem 0;
+  border-radius: 10px;
+}
+
+.widget-row {
+  padding-left:20px;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  width: 100%;
+  margin: 10px 0;
+  flex-direction: column;
+
+  
+  .weather-icon {
+    max-width: 300px;
+    height: auto;
+  }
+}
+
+.text {
+  font-weight: 800;
+  color: white;
+  font-size: 36px;
+}
+
+.temperature {
+  color: white;
+  font-size: 36px;
+}
+
+/* Button */
+.unit-switch {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.checkbox {
+  display: none;
+}
+
+.slider {
+  width: 70px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 30px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.unit1 {
+  font-weight: 700;
+  color: white;
+  padding-left: 2px;
+}
+
+.unit2 {
+  font-weight: 800;
+  color: white;
+  padding-right: 2px;
+}
+
+.celsius .unit2 {
+  color: rgba(72,72,74,255);;
+  border-radius: 30px;
+  padding-left: 2px;
+  
+}
+.fahrenheit .unit1 {
+  color: rgba(72,72,74);
+  border-radius: 30px;
+}
+
+
+.unit1:hover,
+.unit2:hover {
+  border-radius: 30px;
+  height: 100%;
+}

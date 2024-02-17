@@ -1,0 +1,26 @@
+
+.suggestion-list {
+    background-color: white;
+    list-style: none;
+    display:flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 8px #ddd;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    max-height: 230px;
+    overflow-y: scroll;
+    padding: 1rem;
+    
+}
+
+
+.suggestion-item {
+  border: 1px solid transparent;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: rgba(91, 96, 102, 0.1);
+  
+}
