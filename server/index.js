@@ -9,11 +9,12 @@ import validator from 'email-validator';
 import dotenv from 'dotenv';
 
 const app = expressApp();
+const dbConnectionUri =  process.env.DB_CONNECTION_URI
 app.use(expressApp.json());
 app.use(cors());
 dotenv.config();
 
-mongoose.connect('mongodb://127.0.0.1:27017/userInfo');
+mongoose.connect(dbConnectionUri);
 
 // Hash the password 
 userSchema.pre('save', async function (next) {
