@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export const Login = () => {
     const [email, setEmail] = useState<string | undefined>('');
     const [password, setPassword] = useState<string | undefined>('');
-    const [userToken, setUserToken] = useState(null);
+    const [, setUserToken] = useState(null);
     const [passwordError, setPasswordError] = useState('');
     const [emailError, setEmailError] = useState<string>('');
     const navigate = useNavigate();
