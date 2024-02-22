@@ -11,12 +11,12 @@ import { Icon, LatLng } from 'leaflet';
 import { City } from "../components/SearchBar";
 import { useEffect, useState } from "react";
 
-const proxyServerUrl = 'http://localhost:3001/proxy';
+const proxyServerUrl = '/api/proxy'
 
 const markerIcon = new Icon({
     iconUrl: "https://img.icons8.com/glyph-neue/64/737373/marker--v1.png",
     iconSize: [30,30]
-})
+});
 
 const AddMarker = () => {
     const [position, setPosition] = useState<LatLng | null>(null); ;

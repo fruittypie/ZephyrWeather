@@ -35,7 +35,7 @@ export const Register = () => {
             setPasswordError('Password is required');
             return;
         }
-        axios.post('http://localhost:3001/register', {name, email, password})
+        axios.post('/api/register', {name, email, password})
         .then(result => {
             if (result.data.success) {
                 navigate('/login');

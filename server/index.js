@@ -26,7 +26,7 @@ userSchema.pre('save', async function (next) {
   });
 
 // Handle the login endpoint
-app.post('/login', async(req, res) => {
+app.post('/api/login', async(req, res) => {
     const {email, password} = req.body;
 
     try {
@@ -69,7 +69,7 @@ app.post('/login', async(req, res) => {
 });
 
 // Handle the registration endpoint
-app.post('/register', async(req, res) => { 
+app.post('/api/register', async(req, res) => { 
     try{
         const { name, email, password } = req.body;
 
@@ -123,7 +123,7 @@ app.post('/register', async(req, res) => {
 });
 
 // Endpoint to fetch current weather data
-app.get('/weather', async (req, res) => {
+app.get('/api/weather', async (req, res) => {
     const { lat, lon, isCelsius } = req.query;
     const apiKey = process.env.WEATHER_API_KEY;
     let unit;
@@ -145,7 +145,7 @@ app.get('/weather', async (req, res) => {
 });
 
 // Endpoint to fetch forecast weather data
-app.get('/forecast', async (req, res) => {
+app.get('/api/forecast', async (req, res) => {
     const { lat, lon, isCelsius } = req.query;
     const apiKey = process.env.WEATHER_API_KEY;
     let unit;
@@ -167,7 +167,7 @@ app.get('/forecast', async (req, res) => {
 });
 
 // Endpoint to fetch city data
-app.get('/direct', async (req, res) => {
+app.get('/api/direct', async (req, res) => {
     const { q } = req.query;
     const apiKey = process.env.WEATHER_API_KEY;
   
@@ -184,7 +184,7 @@ app.get('/direct', async (req, res) => {
 });  
 
 // Endpoint to fetch searched news data
-app.get('/search', async (req, res) => {
+app.get('/api/search', async (req, res) => {
     const { q } = req.query;
     const apiKey = process.env.NEWS_API_KEY;
 
@@ -247,7 +247,7 @@ app.get('/proxy/clouds_new/:z/:x/:y', async (req, res) => {
     proxyAndSend(url, res);
 });
 
-const PORT =  process.env.PORT || 3001;
+const PORT =  process.env.PORT;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
